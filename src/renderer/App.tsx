@@ -1,40 +1,76 @@
-import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import icon from '../../assets/icon.svg';
+import { useEffect, useState } from 'react';
+import { Route, MemoryRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
 
-function Hello() {
+interface MediaInfo {
+  app: string;
+  artist?: string;
+  track: string;
+  state: 'playing' | 'paused' | 'stopped';
+}
+
+function Main() {
+  const [trackInfo, setTrackInfo] = useState<MediaInfo | null>(null);
+  useEffect(() => {
+    window.electron.ipcRenderer.on('track-update', (event: any) => {
+      console.log(event);
+      setTrackInfo(event);
+    });
+  }, []);
   return (
     <div>
-      <div className="Hello">
-        <img width="200" alt="icon" src={icon} />
-      </div>
-      <h1>electron-react-boilerplate</h1>
-      <div className="Hello">
-        <a
-          href="https://electron-react-boilerplate.js.org/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="books">
-              📚
-            </span>
-            Read our docs
-          </button>
-        </a>
-        <a
-          href="https://github.com/sponsors/electron-react-boilerplate"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="folded hands">
-              🙏
-            </span>
-            Donate
-          </button>
-        </a>
-      </div>
+      <button
+        type="button"
+        onClick={() =>
+          window.electron.ipcRenderer.sendMessage('window-control', 'close')
+        }
+      >
+        close
+      </button>
+      <button
+        type="button"
+        onClick={() =>
+          window.electron.ipcRenderer.sendMessage('window-control', 'minimize')
+        }
+      >
+        minimize
+      </button>
+      <p>{trackInfo?.app}</p>
+      <p>{trackInfo?.artist}</p>
+      <p>{trackInfo?.track}</p>
+      <p>{trackInfo?.state}</p>
+      <button
+        type="button"
+        onClick={() =>
+          window.electron.ipcRenderer.sendMessage('media-control', 'playPause')
+        }
+      >
+        Play
+      </button>
+      <button
+        type="button"
+        onClick={() =>
+          window.electron.ipcRenderer.sendMessage('media-control', 'playPause')
+        }
+      >
+        Pause
+      </button>
+      <button
+        type="button"
+        onClick={() =>
+          window.electron.ipcRenderer.sendMessage('media-control', 'next')
+        }
+      >
+        Next
+      </button>
+      <button
+        type="button"
+        onClick={() =>
+          window.electron.ipcRenderer.sendMessage('media-control', 'previous')
+        }
+      >
+        Previous
+      </button>
     </div>
   );
 }
@@ -43,7 +79,7 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Hello />} />
+        <Route path="/" element={<Main />} />
       </Routes>
     </Router>
   );

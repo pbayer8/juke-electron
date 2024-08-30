@@ -8,11 +8,11 @@
  * When running `npm run build` or `npm run build:main`, this file is compiled to
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
-import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
-import { autoUpdater } from 'electron-updater';
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import log from 'electron-log';
-import MenuBuilder from './menu';
+import { autoUpdater } from 'electron-updater';
+import path from 'path';
+import { setupMediaControls, updateTrackInfo } from './media-controls';
 import { resolveHtmlPath } from './util';
 
 class AppUpdater {
@@ -40,7 +40,7 @@ const isDebug =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
 if (isDebug) {
-  require('electron-debug')();
+  // require('electron-debug')();
 }
 
 const installExtensions = async () => {
@@ -73,6 +73,9 @@ const createWindow = async () => {
     show: false,
     width: 1024,
     height: 728,
+    frame: false,
+    transparent: true,
+    hasShadow: false,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: app.isPackaged
@@ -92,14 +95,24 @@ const createWindow = async () => {
     } else {
       mainWindow.show();
     }
+    if (process.env.NODE_ENV === 'development') {
+      mainWindow.webContents.openDevTools({ mode: 'detach' });
+    }
+    updateTrackInfo();
   });
 
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
-
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
+  ipcMain.on('window-control', (event, action: 'close' | 'minimize') => {
+    if (action === 'close') {
+      mainWindow?.close();
+    } else if (action === 'minimize') {
+      mainWindow?.minimize();
+    }
+  });
+  // const menuBuilder = new MenuBuilder(mainWindow);
+  // menuBuilder.buildMenu();
 
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {
@@ -128,6 +141,9 @@ app
   .whenReady()
   .then(() => {
     createWindow();
+    setupMediaControls((info) => {
+      mainWindow?.webContents.send('track-update', info);
+    });
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
