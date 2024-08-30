@@ -5,6 +5,7 @@ interface MediaInfo {
   app: string;
   artist?: string;
   track: string;
+  album?: string;
   state: 'playing' | 'paused' | 'stopped';
 }
 
@@ -28,7 +29,7 @@ const mediaApps: MediaApp[] = [
         tell application "Music"
           set playerState to (get player state) as string
           if playerState is not "stopped" then
-            return "Music${TOKEN_SEPARATOR}" & artist of current track & "${TOKEN_SEPARATOR}" & name of current track & "${TOKEN_SEPARATOR}" & playerState
+            return "Music${TOKEN_SEPARATOR}" & artist of current track & "${TOKEN_SEPARATOR}" & name of current track & "${TOKEN_SEPARATOR}" & album of current track & "${TOKEN_SEPARATOR}" & playerState
           end if
         end tell
       end if
@@ -46,7 +47,7 @@ const mediaApps: MediaApp[] = [
         tell application "Spotify"
           set playerState to (get player state) as string
           if playerState is not "stopped" then
-            return "Spotify${TOKEN_SEPARATOR}" & artist of current track & "${TOKEN_SEPARATOR}" & name of current track & "${TOKEN_SEPARATOR}" & playerState
+            return "Spotify${TOKEN_SEPARATOR}" & artist of current track & "${TOKEN_SEPARATOR}" & name of current track & "${TOKEN_SEPARATOR}" & album of current track & "${TOKEN_SEPARATOR}" & playerState
           end if
         end tell
       end if
@@ -110,12 +111,13 @@ const genericMediaControls = {
     'tell application "System Events" to key code 18 using {command down, option down}',
 };
 function parseMediaInfo(result: string): MediaInfo | null {
-  const [app, artist, track, state] = result.split(TOKEN_SEPARATOR);
-  console.log({ app, artist, track, state });
+  const [app, artist, track, album, state] = result.split(TOKEN_SEPARATOR);
+  console.log({ app, artist, track, album, state });
   mediaInfo = {
     app,
     artist: artist || undefined,
     track,
+    album: album || undefined,
     state: state as 'playing' | 'paused' | 'stopped',
   };
   if (app && state) {
@@ -158,7 +160,6 @@ export function setupMediaControls(cb: (info: MediaInfo) => void) {
 ipcMain.on(
   'media-control',
   (event, action: 'playPause' | 'next' | 'previous') => {
-    console.log('media-control', { event, action });
     const { app: appName } = mediaInfo || {};
     const app = mediaApps.find((a) => a.name === appName);
     if (app && app[action]) {

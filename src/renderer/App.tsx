@@ -6,6 +6,7 @@ interface MediaInfo {
   app: string;
   artist?: string;
   track: string;
+  album?: string;
   state: 'playing' | 'paused' | 'stopped';
 }
 
@@ -13,7 +14,6 @@ function Main() {
   const [trackInfo, setTrackInfo] = useState<MediaInfo | null>(null);
   useEffect(() => {
     window.electron.ipcRenderer.on('track-update', (event: any) => {
-      console.log(event);
       setTrackInfo(event);
     });
   }, []);
@@ -38,6 +38,7 @@ function Main() {
       <p>{trackInfo?.app}</p>
       <p>{trackInfo?.artist}</p>
       <p>{trackInfo?.track}</p>
+      <p>{trackInfo?.album}</p>
       <p>{trackInfo?.state}</p>
       <button
         type="button"
