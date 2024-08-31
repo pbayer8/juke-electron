@@ -110,12 +110,17 @@ const createWindow = async () => {
   });
   // const menuBuilder = new MenuBuilder(mainWindow);
   // menuBuilder.buildMenu();
-  // TODO: window size set by background
+
   ipcMain.handle('get-theme', async (event, themePath: string) => {
     const parser = new ThemeParser(themePath);
     try {
       const themeData = await parser.parse();
-      console.log(themeData);
+      if (themeData?.images?.background) {
+        mainWindow?.setSize(
+          themeData.images.background.width,
+          themeData.images.background.height,
+        );
+      }
       return themeData;
     } catch (error) {
       console.error('Error parsing theme:', error);

@@ -25,23 +25,42 @@ function Main() {
       .catch(console.error);
   }, []);
 
+  useEffect(() => {
+    if (theme?.font) {
+      const fontUrl = parseBlob(theme.font, 'font/ttf');
+      const fontFace = new FontFace('CustomFont', `url(${fontUrl})`);
+
+      fontFace
+        .load()
+        .then((loadedFace) => document.fonts.add(loadedFace))
+        .catch((error) => {
+          console.error('Error loading font:', error);
+        });
+
+      return () => {
+        URL.revokeObjectURL(fontUrl);
+      };
+    }
+    return () => {};
+  }, [theme?.font]);
+
   if (!theme) return null;
 
   const getImageSrc = (imageData: Image) =>
-    parseBlob(imageData.data!, `image/${imageData.extension}`);
+    parseBlob(imageData?.data, `image/${imageData.extension}`);
 
   const sendMessage = (channel: string, message: string) => () =>
     window.electron.ipcRenderer.sendMessage(channel, message);
-
   return (
     <div
       style={{
-        font: theme.font ? parseBlob(theme.font, 'font/ttf') : 'sans-serif',
+        fontFamily: theme.font ? 'CustomFont, sans-serif' : 'sans-serif',
       }}
     >
       <img
         src={getImageSrc(theme.images.background)}
         alt="background"
+        id="background"
         style={{ position: 'absolute', top: 0, left: 0 }}
       />
       <Button

@@ -14,7 +14,6 @@ export function resolveHtmlPath(htmlFileName: string) {
 }
 
 export const getAssetPath = (...paths: string[]): string => {
-  console.log({ __dirname });
   const RESOURCES_PATH = app.isPackaged
     ? path.join(process.resourcesPath, 'assets')
     : path.join(__dirname, '../../assets');

@@ -5,17 +5,39 @@ body {
 
 button,
 p {
-  -webkit-app-region: no-drag;
   background-color: transparent;
   border: none;
-  cursor: pointer;
   padding: 0;
   margin: 0;
   position: absolute;
+}
+
+button {
+  cursor: pointer;
+  -webkit-app-region: no-drag;
 }
 
 img {
   user-drag: none;
   user-select: none;
   -webkit-user-drag: none;
+}
+
+img#background,
+p {
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.marquee {
+  animation: marquee 15s linear infinite;
 }

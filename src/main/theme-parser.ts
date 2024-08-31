@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import sizeOf from 'image-size';
 import path from 'path';
 import { Config } from './types';
 import { getAssetPath } from './util';
@@ -6,6 +7,8 @@ import { getAssetPath } from './util';
 export type Image = {
   data: ArrayBuffer;
   extension: string;
+  width: number;
+  height: number;
 };
 
 export type Theme = {
@@ -73,11 +76,17 @@ export default class ThemeParser {
       const imagePath = await this.findImage(file);
       if (imagePath) {
         const buffer = await fs.readFile(imagePath);
+        const size = sizeOf(buffer);
         const extension = imagePath.split('.').pop() || '';
         const blob = new Blob([buffer], { type: `image/${extension}` });
         const result = await blob.arrayBuffer();
         const arrayBuffer = new Uint8Array(result);
-        this.images[file] = { data: arrayBuffer, extension };
+        this.images[file] = {
+          data: arrayBuffer,
+          extension,
+          width: size.width || 0,
+          height: size.height || 0,
+        };
       }
     });
   }
