@@ -103,19 +103,16 @@ const genericMediaControls = {
   previous:
     'tell application "System Events" to key code 18 using {command down, option down}',
 };
-function parseMediaInfo(result: string): MediaInfo | null {
+function parseMediaInfo(result: string): MediaInfo {
   const [app, artist, track, album, state] = result.split(TOKEN_SEPARATOR);
   mediaInfo = {
-    app,
+    app: app || '',
     artist: artist || undefined,
-    track,
+    track: track || '',
     album: album || undefined,
     state: state as 'playing' | 'paused' | 'stopped',
   };
-  if (app && state) {
-    return mediaInfo;
-  }
-  return null;
+  return mediaInfo;
 }
 function runAppleScript(script: string): string | null {
   try {

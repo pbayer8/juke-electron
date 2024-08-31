@@ -6,11 +6,10 @@ import './App.css';
 import Button from './Button';
 import { parseBlob } from './file-parser';
 import { Text } from './Text';
-
+// TODO: icon, menubar?
 function Main() {
   const [trackInfo, setTrackInfo] = useState<MediaInfo | null>(null);
   const [theme, setTheme] = useState<Theme | null>(null);
-  const themePath = 'frog'; // You can make this configurable
 
   useEffect(() => {
     const handleTrackUpdate = (...args: unknown[]) => {
@@ -18,11 +17,9 @@ function Main() {
       setTrackInfo(event);
     };
     window.electron.ipcRenderer.on('track-update', handleTrackUpdate);
-
-    window.electron.ipcRenderer
-      .getTheme(themePath)
-      .then(setTheme)
-      .catch(console.error);
+    window.electron.ipcRenderer.on('theme-update', (event) => {
+      setTheme(event as Theme);
+    });
   }, []);
 
   useEffect(() => {

@@ -81,10 +81,21 @@ const createWindow = async () => {
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
+  const THEME = 'frog';
+  const parser = new ThemeParser(THEME);
+
+  const themeData = await parser.parse();
 
   mainWindow.on('ready-to-show', () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
+    }
+    mainWindow.webContents.send('theme-update', themeData);
+    if (themeData?.images?.background) {
+      mainWindow?.setSize(
+        themeData.images.background.width,
+        themeData.images.background.height,
+      );
     }
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
@@ -111,22 +122,6 @@ const createWindow = async () => {
   // const menuBuilder = new MenuBuilder(mainWindow);
   // menuBuilder.buildMenu();
 
-  ipcMain.handle('get-theme', async (event, themePath: string) => {
-    const parser = new ThemeParser(themePath);
-    try {
-      const themeData = await parser.parse();
-      if (themeData?.images?.background) {
-        mainWindow?.setSize(
-          themeData.images.background.width,
-          themeData.images.background.height,
-        );
-      }
-      return themeData;
-    } catch (error) {
-      console.error('Error parsing theme:', error);
-      return null;
-    }
-  });
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {
     shell.openExternal(edata.url);
