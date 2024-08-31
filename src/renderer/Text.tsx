@@ -16,7 +16,7 @@ interface TextProps {
 
 export const Text = ({ text, config, theme }: TextProps) => {
   const [isOverflowing, setIsOverflowing] = useState(false);
-  const textRef = useRef<HTMLParagraphElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const width = config.textWidth || theme.config?.textWidth || 100;
@@ -47,23 +47,42 @@ export const Text = ({ text, config, theme }: TextProps) => {
         width: `${width}px`,
         height: `${fontSize + 4}px`,
         overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
       }}
     >
-      <p
-        ref={textRef}
+      <div
         className={isOverflowing ? 'marquee' : ''}
         style={{
-          fontSize: `${fontSize}px`,
-          color,
           whiteSpace: 'nowrap',
-          margin: 0,
-          lineHeight: `${fontSize + 4}px`,
-          display: 'inline-block', // Ensure the p takes only the width of its content
-          paddingLeft: isOverflowing ? `${width}px` : '0', // Start the text outside the container if overflowing
+          display: 'inline-flex',
+          alignItems: 'center',
+          height: '100%',
+          gap: '10px',
         }}
       >
-        {text}
-      </p>
+        <span
+          ref={textRef}
+          style={{
+            fontSize: `${fontSize}px`,
+            color,
+            padding: '0 2px',
+          }}
+        >
+          {text}
+        </span>
+        {isOverflowing && (
+          <span
+            style={{
+              fontSize: `${fontSize}px`,
+              color,
+              padding: '0 2px',
+            }}
+          >
+            {text}
+          </span>
+        )}
+      </div>
     </div>
   );
 };
