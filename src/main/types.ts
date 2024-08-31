@@ -1,4 +1,4 @@
-export interface Config {
+export type Config = {
   closeX: number;
   closeY: number;
   minimizeX: number;
@@ -32,4 +32,12 @@ export interface Config {
   albumFontSize?: number;
   albumFontColor?: string;
   albumTextWidth?: number;
-}
+};
+
+export type MediaInfo = {
+  app: string;
+  artist?: string;
+  track: string;
+  album?: string;
+  state: 'playing' | 'paused' | 'stopped';
+};

@@ -13,3 +13,9 @@ p {
   margin: 0;
   position: absolute;
 }
+
+img {
+  user-drag: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}

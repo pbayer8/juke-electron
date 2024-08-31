@@ -1,20 +1,10 @@
+// TODO: hover and pressed effects
 import { useEffect, useState } from 'react';
 import { Route, MemoryRouter as Router, Routes } from 'react-router-dom';
 import { Theme } from '../main/theme-parser';
+import { MediaInfo } from '../main/types';
 import './App.css';
 import { parseBlob } from './file-parser';
-
-// TODO: ask to make loops and less redundant
-// TODO: css make no images draggable
-// TODO: hover and pressed effects
-
-interface MediaInfo {
-  app: string;
-  artist?: string;
-  track: string;
-  album?: string;
-  state: 'playing' | 'paused' | 'stopped';
-}
 
 function Main() {
   const [trackInfo, setTrackInfo] = useState<MediaInfo | null>(null);

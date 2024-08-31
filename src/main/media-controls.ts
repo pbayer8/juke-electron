@@ -1,13 +1,6 @@
 import { execSync } from 'child_process';
 import { ipcMain } from 'electron';
-
-interface MediaInfo {
-  app: string;
-  artist?: string;
-  track: string;
-  album?: string;
-  state: 'playing' | 'paused' | 'stopped';
-}
+import { MediaInfo } from './types';
 
 let mediaInfo: MediaInfo | null = null;
 let callback: (info: MediaInfo) => void;
