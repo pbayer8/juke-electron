@@ -1,0 +1,35 @@
+export interface Config {
+  closeX: number;
+  closeY: number;
+  minimizeX: number;
+  minimizeY: number;
+  playPauseX: number;
+  playPauseY: number;
+  previousX: number;
+  previousY: number;
+  nextX: number;
+  nextY: number;
+  appX: number;
+  appY: number;
+  artistX: number;
+  artistY: number;
+  trackX: number;
+  trackY: number;
+  albumX: number;
+  albumY: number;
+  fontSize?: number;
+  fontColor?: string;
+  textWidth?: number;
+  appFontSize?: number;
+  appFontColor?: string;
+  appTextWidth?: number;
+  artistFontSize?: number;
+  artistFontColor?: string;
+  artistTextWidth?: number;
+  trackFontSize?: number;
+  trackFontColor?: string;
+  trackTextWidth?: number;
+  albumFontSize?: number;
+  albumFontColor?: string;
+  albumTextWidth?: number;
+}

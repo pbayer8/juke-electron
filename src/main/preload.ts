@@ -21,6 +21,7 @@ const electronHandler = {
     once(channel: Channels, func: (...args: unknown[]) => void) {
       ipcRenderer.once(channel, (_event, ...args) => func(...args));
     },
+    getTheme: (themePath: string) => ipcRenderer.invoke('get-theme', themePath),
   },
 };
 

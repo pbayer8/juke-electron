@@ -112,7 +112,6 @@ const genericMediaControls = {
 };
 function parseMediaInfo(result: string): MediaInfo | null {
   const [app, artist, track, album, state] = result.split(TOKEN_SEPARATOR);
-  console.log({ app, artist, track, album, state });
   mediaInfo = {
     app,
     artist: artist || undefined,

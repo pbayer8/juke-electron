@@ -3,11 +3,13 @@ body {
   -webkit-app-region: drag;
 }
 
-button {
+button,
+p {
   -webkit-app-region: no-drag;
   background-color: transparent;
   border: none;
   cursor: pointer;
   padding: 0;
   margin: 0;
+  position: absolute;
 }

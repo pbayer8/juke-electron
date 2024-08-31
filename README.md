@@ -12,21 +12,28 @@ pause.(png|jpg|gif)
 previous.(png|jpg|gif)
 next.(png|jpg|gif)
 
+# optional files:
+
+closePressed.(png|jpg|gif)
+minimizePressed.(png|jpg|gif)
+playPressed.(png|jpg|gif)
+pausePressed.(png|jpg|gif)
+previousPressed.(png|jpg|gif)
+nextPressed.(png|jpg|gif)
+font.ttf
+
 config.json (all numbers are in px from the top left corner of the screen, colors are hex):
 {
 closeX: number,
 closeY: number,
 minimizeX: number,
 minimizeY: number,
-playX: number,
-playY: number,
-pauseX: number,
-pauseY: number,
+playPauseX: number,
+playPauseY: number,
 previousX: number,
 previousY: number,
-fontSize: number,
-fontColor: string (hex),
-textWidth: number,
+nextX: number,
+nextY: number,
 appX: number,
 appY: number,
 artistX: number,
@@ -36,6 +43,9 @@ trackY: number,
 albumX: number,
 albumY: number,
 // Optional fields:
+fontSize: number,
+fontColor: string (hex),
+textWidth: number,
 appFontSize: number,
 appFontColor: string (hex),
 appTextWidth: number,

@@ -13,6 +13,7 @@ import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import { setupMediaControls, updateTrackInfo } from './media-controls';
+import ThemeParser from './theme-parser';
 import { resolveHtmlPath } from './util';
 
 class AppUpdater {
@@ -99,6 +100,7 @@ const createWindow = async () => {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
+
   ipcMain.on('window-control', (event, action: 'close' | 'minimize') => {
     if (action === 'close') {
       mainWindow?.close();
@@ -108,7 +110,18 @@ const createWindow = async () => {
   });
   // const menuBuilder = new MenuBuilder(mainWindow);
   // menuBuilder.buildMenu();
-
+  // TODO: window size set by background
+  ipcMain.handle('get-theme', async (event, themePath: string) => {
+    const parser = new ThemeParser(themePath);
+    try {
+      const themeData = await parser.parse();
+      console.log(themeData);
+      return themeData;
+    } catch (error) {
+      console.error('Error parsing theme:', error);
+      return null;
+    }
+  });
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {
     shell.openExternal(edata.url);
