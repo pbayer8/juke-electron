@@ -13,7 +13,8 @@ import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import { setupMediaControls, updateTrackInfo } from './media-controls';
-import ThemeParser from './theme-parser';
+import MenuBuilder from './menu';
+import { setTheme } from './theme-parser';
 import { resolveHtmlPath } from './util';
 
 class AppUpdater {
@@ -81,22 +82,12 @@ const createWindow = async () => {
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
-  const THEME = 'frog';
-  const parser = new ThemeParser(THEME);
-
-  const themeData = await parser.parse();
 
   mainWindow.on('ready-to-show', () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
-    mainWindow.webContents.send('theme-update', themeData);
-    if (themeData?.images?.background) {
-      mainWindow?.setSize(
-        themeData.images.background.width,
-        themeData.images.background.height,
-      );
-    }
+    setTheme('frog', mainWindow);
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
     } else {
@@ -119,8 +110,8 @@ const createWindow = async () => {
       mainWindow?.minimize();
     }
   });
-  // const menuBuilder = new MenuBuilder(mainWindow);
-  // menuBuilder.buildMenu();
+  const menuBuilder = new MenuBuilder(mainWindow);
+  menuBuilder.buildMenu();
 
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {

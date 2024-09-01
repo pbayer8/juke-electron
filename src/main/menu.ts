@@ -1,10 +1,13 @@
 import {
   app,
-  Menu,
-  shell,
   BrowserWindow,
+  Menu,
   MenuItemConstructorOptions,
+  shell,
 } from 'electron';
+import fs from 'fs';
+import { setTheme } from './theme-parser';
+import { getAssetPath } from './util';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -52,19 +55,49 @@ export default class MenuBuilder {
     });
   }
 
+  getThemeFolders(): string[] {
+    const themesPath = getAssetPath('themes');
+    try {
+      return fs
+        .readdirSync(themesPath, { withFileTypes: true })
+        .filter((dirent) => dirent.isDirectory())
+        .map((dirent) => dirent.name);
+    } catch (error) {
+      console.error('Error reading themes directory:', error);
+      return [];
+    }
+  }
+
+  buildThemeSubmenu(): MenuItemConstructorOptions {
+    const themes = this.getThemeFolders();
+    return {
+      label: 'Theme',
+      submenu: themes.map((theme) => ({
+        label: theme,
+        type: 'checkbox',
+        checked: false, // You might want to implement logic to check the current theme
+        click: () => {
+          // Implement theme switching logic here
+          console.log(`Switching to theme: ${theme}`);
+          setTheme(theme, this.mainWindow);
+        },
+      })),
+    };
+  }
+
   buildDarwinTemplate(): MenuItemConstructorOptions[] {
     const subMenuAbout: DarwinMenuItemConstructorOptions = {
-      label: 'Electron',
+      label: 'Juke',
       submenu: [
         {
-          label: 'About ElectronReact',
+          label: 'About Juke',
           selector: 'orderFrontStandardAboutPanel:',
         },
         { type: 'separator' },
         { label: 'Services', submenu: [] },
         { type: 'separator' },
         {
-          label: 'Hide ElectronReact',
+          label: 'Hide Juke',
           accelerator: 'Command+H',
           selector: 'hide:',
         },
@@ -189,7 +222,16 @@ export default class MenuBuilder {
         ? subMenuViewDev
         : subMenuViewProd;
 
-    return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
+    const subMenuTheme = this.buildThemeSubmenu();
+
+    return [
+      subMenuAbout,
+      subMenuTheme,
+      subMenuEdit,
+      subMenuView,
+      subMenuWindow,
+      subMenuHelp,
+    ];
   }
 
   buildDefaultTemplate() {
@@ -252,6 +294,7 @@ export default class MenuBuilder {
                 },
               ],
       },
+      this.buildThemeSubmenu(),
       {
         label: 'Help',
         submenu: [

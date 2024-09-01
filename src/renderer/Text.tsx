@@ -46,7 +46,8 @@ export const Text = ({ text, config, theme }: TextProps) => {
         left: `${config.x}px`,
         width: `${width}px`,
         height: `${fontSize + 4}px`,
-        overflow: 'hidden',
+        overflowX: 'hidden',
+        overflowY: 'visible',
         display: 'flex',
         alignItems: 'center',
       }}
