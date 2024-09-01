@@ -74,8 +74,8 @@ export default class MenuBuilder {
       label: 'Theme',
       submenu: themes.map((theme) => ({
         label: theme,
-        type: 'checkbox',
-        checked: false, // You might want to implement logic to check the current theme
+        type: 'radio',
+        checked: theme === 'frog', // You might want to implement logic to check the current theme
         click: () => {
           // Implement theme switching logic here
           console.log(`Switching to theme: ${theme}`);
