@@ -7,7 +7,7 @@ import {
 } from 'electron';
 import fs from 'fs';
 import { setTheme } from './theme-parser';
-import { getAssetPath } from './util';
+import { getAssetPath, renderString } from './util';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -73,7 +73,7 @@ export default class MenuBuilder {
     return {
       label: 'Theme',
       submenu: themes.map((theme) => ({
-        label: theme,
+        label: renderString(theme),
         type: 'radio',
         checked: theme === 'frog', // You might want to implement logic to check the current theme
         click: () => {

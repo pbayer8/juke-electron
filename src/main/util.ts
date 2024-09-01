@@ -19,3 +19,6 @@ export const getAssetPath = (...paths: string[]): string => {
     : path.join(__dirname, '../../assets');
   return path.join(RESOURCES_PATH, ...paths);
 };
+
+export const renderString = (str: string): string =>
+  str.replace(/[-_]/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());

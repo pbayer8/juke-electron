@@ -1,4 +1,6 @@
 {
+  "themeName": "Frog",
+  "themeDesigner": "Phil Bayer",
   "albumTextWidth": 127,
   "albumX": 130,
   "albumY": 164,
@@ -11,7 +13,7 @@
   "closeX": 30.88,
   "closeY": 77,
   "fontColor": "rgba(1,28,60,.75)",
-  "fontSize": 12,
+  "fontSize": 14,
   "minimizeX": 30.23,
   "minimizeY": 100,
   "playPauseX": 142.88,
