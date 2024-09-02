@@ -87,6 +87,7 @@ const createWindow = async () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
+    // TODO: remember theme with electron-store
     setTheme('frog', mainWindow);
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
