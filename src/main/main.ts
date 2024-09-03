@@ -14,6 +14,7 @@ import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import { setupMediaControls, updateTrackInfo } from './media-controls';
 import MenuBuilder from './menu';
+import { store } from './store';
 import { setTheme } from './theme-parser';
 import { resolveHtmlPath } from './util';
 
@@ -67,8 +68,8 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
-    height: 728,
+    width: 100,
+    height: 100,
     frame: false,
     transparent: true,
     hasShadow: false,
@@ -87,8 +88,12 @@ const createWindow = async () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
+    setTheme(store.get('theme') as string, mainWindow);
+    store.onDidChange('theme', (newTheme: any) => {
+      console.log('theme changed to', newTheme);
+      setTheme(newTheme, mainWindow!);
+    });
     // TODO: remember theme with electron-store
-    setTheme('frog', mainWindow);
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
     } else {
