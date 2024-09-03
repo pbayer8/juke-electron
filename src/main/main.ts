@@ -18,6 +18,9 @@ import { store } from './store';
 import { setTheme } from './theme-parser';
 import { resolveHtmlPath } from './util';
 
+// TODO: theme picker window
+// TODO: landing page
+
 class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
