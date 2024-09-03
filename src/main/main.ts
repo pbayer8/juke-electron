@@ -93,7 +93,6 @@ const createWindow = async () => {
       console.log('theme changed to', newTheme);
       setTheme(newTheme, mainWindow!);
     });
-    // TODO: remember theme with electron-store
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
     } else {

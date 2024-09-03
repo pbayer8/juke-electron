@@ -6,7 +6,7 @@ import './App.css';
 import Button from './Button';
 import { parseBlob } from './file-parser';
 import { Text } from './Text';
-// TODO: icon, menubar?
+
 function Main() {
   const [trackInfo, setTrackInfo] = useState<MediaInfo | null>(null);
   const [theme, setTheme] = useState<Theme | null>(null);
